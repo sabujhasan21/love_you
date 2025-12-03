@@ -1,11 +1,17 @@
 import streamlit as st
 import time
+import os
 
+# Page setup
 st.set_page_config(layout="wide")
 st.title("💖 Love Animation 💖")
 
+# Absolute path for music file
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+music_path = os.path.join(BASE_DIR, "music", "bg_music.mp3")
+
 # Background music
-st.audio("music/bg_music.mp3", format="audio/mp3", start_time=0)
+st.audio(music_path, format="audio/mp3", start_time=0)
 
 # Gift box emoji
 st.markdown(
@@ -43,7 +49,10 @@ if gift_clicked:
     ]
 
     for msg in messages:
-        message_placeholder.markdown(f"<h2 style='text-align:center; color:#ffe6f2'>{msg}</h2>", unsafe_allow_html=True)
+        message_placeholder.markdown(
+            f"<h2 style='text-align:center; color:#ffe6f2'>{msg}</h2>", 
+            unsafe_allow_html=True
+        )
         time.sleep(2)  # delay between messages
 
     # Clear messages and show final romantic message
