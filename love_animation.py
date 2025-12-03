@@ -5,6 +5,7 @@ st.set_page_config(page_title="❤️ Love Gift Animation ❤️", layout="wide"
 
 html_code = """
 <style>
+/* Base Styles - Using viewport units for inherent responsiveness */
 html, body, [class*="block-container"] {
     margin:0; padding:0; overflow:hidden; height:100vh; width:100vw;
     background: radial-gradient(circle at center, #1a0f1f, #4d0f1f 100%);
@@ -26,13 +27,15 @@ html, body, [class*="block-container"] {
 
 .message {
     position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
-    color:#ffe6f2; font-family:Georgia, serif; font-size:4vh;
+    color:#ffe6f2; font-family:Georgia, serif; font-size:4vh; /* Default size for medium/large screens */
     text-align:center; opacity:0; transition: opacity 1s ease;
+    max-width: 90%; /* Ensures text doesn't hit the screen edges */
 }
 
 .final {
     position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
-    font-family:Georgia, serif; font-size:8vh; color:#ff4d6d;
+    font-family:Georgia, serif; font-size:8vh; /* Default size for medium/large screens */
+    color:#ff4d6d;
     text-align:center; opacity:0; transition: opacity 2s ease;
 }
 
@@ -50,6 +53,28 @@ html, body, [class*="block-container"] {
 @keyframes twinkle {
     from { opacity: 0.2; transform: scale(0.5); }
     to { opacity: 1; transform: scale(1.2); }
+}
+
+/* Media Queries for Mobile Responsiveness 
+   Adjusting font sizes for smaller screens (e.g., width less than 600px) 
+*/
+@media (max-width: 600px) {
+    #gift {
+        font-size: 12vh; /* Slightly smaller gift icon */
+    }
+
+    #open-text {
+        font-size: 2.5vh; /* Smaller instruction text */
+    }
+
+    .message {
+        font-size: 3vh; /* Smaller message text on mobile */
+    }
+
+    .final {
+        font-size: 6vh; /* Smaller final text on mobile */
+        padding: 0 10px; /* Adding slight padding to prevent cutting off */
+    }
 }
 </style>
 
