@@ -25,19 +25,20 @@ html, body, [class*="block-container"] {
     font-size:3vh; color:#ffe6f2; font-family:Georgia, serif;
 }
 
+/* **Responsive Text Styles** */
 .message {
     position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
     color:#ffe6f2; font-family:Georgia, serif; 
-    font-size: 4vh; /* Changed: Default size based on viewport height */
+    font-size: 4vh; /* Large screen default font size */
     text-align:center; opacity:0; transition: opacity 1s ease;
     max-width: 90%; 
-    min-width: 300px; /* Added: To maintain readability on very small devices */
+    line-height: 1.4; /* Improved readability for multi-line messages */
 }
 
 .final {
     position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
     font-family:Georgia, serif; 
-    font-size: 8vh; /* Changed: Default size based on viewport height */
+    font-size: 8vh; /* Large screen default font size */
     color:#ff4d6d;
     text-align:center; opacity:0; transition: opacity 2s ease;
     max-width: 90%;
@@ -59,7 +60,7 @@ html, body, [class*="block-container"] {
     to { opacity: 1; transform: scale(1.2); }
 }
 
-/* Media Queries for better Mobile Responsiveness */
+/* 📱 Media Queries for Mobile Responsiveness (Screen width <= 600px) 📱 */
 @media (max-width: 600px) {
     #gift {
         font-size: 12vh;
@@ -70,11 +71,12 @@ html, body, [class*="block-container"] {
     }
 
     .message {
-        font-size: 3.5vh; /* Responsive adjustment */
+        font-size: 3vh; /* Smaller font for message text on mobile */
+        width: 95%; /* Use more width on small screens */
     }
 
     .final {
-        font-size: 6.5vh; /* Responsive adjustment */
+        font-size: 5.5vh; /* Smaller font for the final text on mobile */
         padding: 0 10px;
     }
 }
