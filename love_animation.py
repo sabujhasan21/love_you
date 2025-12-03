@@ -37,7 +37,7 @@ html, body, [class*="block-container"] {
 }
 
 .heart {
-    position:absolute; font-size:20px; color:transparent; -webkit-text-stroke:1px #ff4d6d;
+    position:absolute; font-size:15px; color:transparent; -webkit-text-stroke:1px #ff4d6d;
     user-select:none; will-change: transform, top, opacity;
 }
 
@@ -90,14 +90,14 @@ for(let i=0;i<80;i++){
     stars.push(s);
 }
 
-// Create floating stroke hearts
-function createHeart() {
+// Floating stroke hearts
+function createHeart(size=15, top=-5, x=null){
     const heart = document.createElement('div');
     heart.classList.add('heart');
     heart.innerText="❤️";
-    heart.style.left = Math.random()*95 + "%";
-    heart.style.top = "-5%";
-    heart.style.fontSize = (15 + Math.random()*15) + "px";
+    heart.style.left = (x!==null ? x : Math.random()*95) + "%";
+    heart.style.top = top + "%";
+    heart.style.fontSize = size + "px";
     heart.rotation = Math.random()*360;
     heart.speed = 0.3 + Math.random()*0.7;
     heart.alpha = 0;
@@ -105,7 +105,7 @@ function createHeart() {
     hearts.push(heart);
 }
 
-function animateHearts() {
+function animateHearts(){
     hearts.forEach((h,i)=>{
         let top = parseFloat(h.style.top);
         top += h.speed;
@@ -132,18 +132,9 @@ gift.addEventListener('click', ()=>{
     gift.style.transform="translate(-50%,-50%) scale(0)";
     setTimeout(()=>{gift.style.display='none'; openText.style.display='none';},300);
 
-    for(let i=0;i<80;i++){
-        const b = document.createElement('div');
-        b.classList.add('heart');
-        b.innerText="❤️";
-        b.style.left = 50 + Math.random()*10 -5 + "%";
-        b.style.top = 50 + Math.random()*10 -5 + "%";
-        b.style.fontSize = (10 + Math.random()*20) + "px";
-        b.rotation = Math.random()*360;
-        b.speed = 1+Math.random()*2;
-        b.alpha=1;
-        container.appendChild(b);
-        hearts.push(b);
+    // Small stroke heart bursts
+    for(let i=0;i<100;i++){
+        createHeart(Math.random()*12+8, 50+Math.random()*10, 50+Math.random()*10);
     }
 
     let idx=0;
@@ -157,7 +148,9 @@ gift.addEventListener('click', ()=>{
         messageDiv.style.opacity=1;
         function type(){
             if(i<msg.length){
+                // add small space between words for cinematic feel
                 messageDiv.innerText += msg[i];
+                if(msg[i]===' ') messageDiv.innerText += '\u00A0'; 
                 i++;
                 setTimeout(type,50);
             } else { setTimeout(cb,1500); }
