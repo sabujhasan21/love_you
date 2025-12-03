@@ -1,17 +1,9 @@
 import streamlit as st
 import time
-import os
 
 # Page setup
 st.set_page_config(layout="wide")
 st.title("💖 Love Animation 💖")
-
-# Absolute path for music file
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-music_path = os.path.join(BASE_DIR, "music", "bg_music.mp3")
-
-# Background music
-st.audio(music_path, format="audio/mp3", start_time=0)
 
 # Gift box emoji
 st.markdown(
