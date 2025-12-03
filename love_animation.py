@@ -7,12 +7,11 @@ html_code = """
 <style>
 html, body, [class*="block-container"] {
     margin:0; padding:0; overflow:hidden; height:100vh; width:100vw;
-    background: linear-gradient(to bottom right, #1a0f1f, #4d0f1f);
+    background: radial-gradient(circle at center, #1a0f1f, #4d0f1f 100%);
 }
 
 #container {
-    width:100%; height:100%; position:relative; text-align:center;
-    overflow:hidden;
+    width:100%; height:100%; position:relative; text-align:center; overflow:hidden;
 }
 
 #gift {
@@ -39,7 +38,18 @@ html, body, [class*="block-container"] {
 
 .heart {
     position:absolute; font-size:20px; color:transparent; -webkit-text-stroke:1px #ff4d6d;
-    user-select:none; will-change: transform, top;
+    user-select:none; will-change: transform, top, opacity;
+}
+
+.star {
+    position:absolute; width:2px; height:2px; background:white;
+    border-radius:50%; opacity:0.8;
+    animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+    from { opacity: 0.2; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1.2); }
 }
 </style>
 
@@ -65,28 +75,48 @@ const messages = [
 ];
 
 let hearts = [];
+let stars = [];
 
+// Create stars
+for(let i=0;i<80;i++){
+    const s = document.createElement('div');
+    s.classList.add('star');
+    s.style.left=Math.random()*100+"%";
+    s.style.top=Math.random()*100+"%";
+    s.style.width=(1+Math.random()*2)+"px";
+    s.style.height=(1+Math.random()*2)+"px";
+    s.style.animationDuration=(1+Math.random()*2)+"s";
+    container.appendChild(s);
+    stars.push(s);
+}
+
+// Create floating stroke hearts
 function createHeart() {
     const heart = document.createElement('div');
     heart.classList.add('heart');
-    heart.innerText = "❤️";
+    heart.innerText="❤️";
     heart.style.left = Math.random()*95 + "%";
     heart.style.top = "-5%";
     heart.style.fontSize = (15 + Math.random()*15) + "px";
     heart.rotation = Math.random()*360;
+    heart.speed = 0.3 + Math.random()*0.7;
+    heart.alpha = 0;
     container.appendChild(heart);
-    hearts.push({el:heart, speed:1+Math.random()*2, rotSpeed:Math.random()*5});
+    hearts.push(heart);
 }
 
 function animateHearts() {
     hearts.forEach((h,i)=>{
-        let top = parseFloat(h.el.style.top);
+        let top = parseFloat(h.style.top);
         top += h.speed;
-        h.el.style.top = top + "%";
-        h.rotation += h.rotSpeed;
-        h.el.style.transform = "translate(-50%,0) rotate("+h.rotation+"deg)";
+        h.style.top = top + "%";
+        h.rotation += 1;
+        h.style.transform = "translate(-50%,0) rotate("+h.rotation+"deg)";
+        h.alpha += 0.01;
+        if(h.alpha>1) h.alpha=1;
+        h.style.opacity = h.alpha;
         if(top>100){
-            container.removeChild(h.el);
+            container.removeChild(h);
             hearts.splice(i,1);
             createHeart();
         }
@@ -94,14 +124,15 @@ function animateHearts() {
     requestAnimationFrame(animateHearts);
 }
 
-for(let i=0;i<50;i++){createHeart();}
+for(let i=0;i<40;i++){ createHeart(); }
 animateHearts();
 
+// Gift click
 gift.addEventListener('click', ()=>{
     gift.style.transform="translate(-50%,-50%) scale(0)";
     setTimeout(()=>{gift.style.display='none'; openText.style.display='none';},300);
 
-    for(let i=0;i<100;i++){
+    for(let i=0;i<80;i++){
         const b = document.createElement('div');
         b.classList.add('heart');
         b.innerText="❤️";
@@ -109,8 +140,10 @@ gift.addEventListener('click', ()=>{
         b.style.top = 50 + Math.random()*10 -5 + "%";
         b.style.fontSize = (10 + Math.random()*20) + "px";
         b.rotation = Math.random()*360;
+        b.speed = 1+Math.random()*2;
+        b.alpha=1;
         container.appendChild(b);
-        hearts.push({el:b, speed:Math.random()*3 +1, rotSpeed:Math.random()*10});
+        hearts.push(b);
     }
 
     let idx=0;
