@@ -77,6 +77,7 @@ let petals = [];
 let explosions = [];
 const NUM_PETALS = 50;
 
+// Petals
 class Petal {
     constructor(){
         this.x = Math.random()*canvas.width;
@@ -108,6 +109,7 @@ class Petal {
 }
 for(let i=0;i<NUM_PETALS;i++) petals.push(new Petal());
 
+// Explosion
 class Particle{
     constructor(x,y){
         this.x=x;
@@ -145,6 +147,7 @@ function animate(){
 }
 animate();
 
+// Messages array
 const messages = [
 "My heart smiles whenever I think of you.",
 "You are the sweetest part of my life.",
@@ -155,13 +158,14 @@ const messages = [
 "My world feels complete because of you.",
 "And lastly..."
 ];
-let msgIndex=0;
-let charIndex=0;
+
+let msgIndex = 0;
+let charIndex = 0;
 const msgDiv = document.getElementById("message");
 
-Typewriter effect
+// Sequential typewriter effect
 function typeWriter(){
-    if(msgIndex>=messages.length){
+    if(msgIndex >= messages.length){
         document.getElementById("final").style.opacity=1;
         msgDiv.innerHTML="";
         return;
@@ -172,13 +176,13 @@ function typeWriter(){
     if(charIndex>currentMsg.length){
         charIndex=0;
         msgIndex++;
-        setTimeout(typeWriter,2500);
-    }else{
+        setTimeout(typeWriter,2000); // next message after delay
+    } else {
         setTimeout(typeWriter,50);
     }
 }
 
- Gift click event
+// Gift click event triggers everything sequentially
 document.getElementById("gift").addEventListener("click",()=>{
     const gift = document.getElementById("gift");
     const instr = document.getElementById("instruction");
@@ -196,4 +200,3 @@ document.getElementById("gift").addEventListener("click",()=>{
 """
 
 components.html(html_code, height=900)
-
