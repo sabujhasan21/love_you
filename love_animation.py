@@ -16,7 +16,7 @@ html, body, [class*="block-container"] {
 
 #gift {
     font-size:15vh; cursor:pointer; position:absolute; top:50%; left:50%;
-    transform:translate(-50%, -50%);
+    transform:translate(-50%, -50%); transition: transform 0.3s ease;
 }
 
 #open-text {
@@ -27,17 +27,18 @@ html, body, [class*="block-container"] {
 .message {
     position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
     color:#ffe6f2; font-family:Georgia, serif; font-size:4vh;
-    text-align:center;
+    text-align:center; opacity:0; transition: opacity 1s ease;
 }
 
 .final {
     position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
-    font-family:Georgia, serif; font-size:8vh; color:#ff4d6d; text-align:center;
+    font-family:Georgia, serif; font-size:8vh; color:#ff4d6d;
+    text-align:center; opacity:0; transition: opacity 2s ease;
 }
 
 .heart {
     position:absolute; font-size:20px; color:transparent; -webkit-text-stroke:1px #ff4d6d;
-    user-select:none;
+    user-select:none; will-change: transform, top;
 }
 </style>
 
@@ -64,6 +65,7 @@ const messages = [
 
 let hearts = [];
 
+// Create falling stroke hearts
 function createHeart() {
     const heart = document.createElement('div');
     heart.classList.add('heart');
@@ -71,31 +73,49 @@ function createHeart() {
     heart.style.left = Math.random()*95 + "%";
     heart.style.top = "-5%";
     heart.style.fontSize = (15 + Math.random()*15) + "px";
+    heart.rotation = Math.random()*360;
     container.appendChild(heart);
-    hearts.push({el:heart, speed:1+Math.random()*2});
+    hearts.push({el:heart, speed:1+Math.random()*2, rotSpeed:Math.random()*5});
 }
 
 function animateHearts() {
     hearts.forEach((h,i)=>{
         let top = parseFloat(h.el.style.top);
         top += h.speed;
-        if(top>100) {
+        h.el.style.top = top + "%";
+        h.rotation += h.rotSpeed;
+        h.el.style.transform = "translate(-50%,0) rotate("+h.rotation+"deg)";
+        if(top>100){
             container.removeChild(h.el);
             hearts.splice(i,1);
             createHeart();
-        } else {
-            h.el.style.top = top + "%";
         }
     });
     requestAnimationFrame(animateHearts);
 }
 
-animateHearts();
 for(let i=0;i<50;i++){createHeart();}
+animateHearts();
 
 gift.addEventListener('click', ()=>{
-    gift.style.display='none';
-    openText.style.display='none';
+    // Animate gift shrink
+    gift.style.transform="translate(-50%,-50%) scale(0)";
+    setTimeout(()=>{gift.style.display='none'; openText.style.display='none';},300);
+
+    // Gift burst hearts
+    for(let i=0;i<100;i++){
+        const b = document.createElement('div');
+        b.classList.add('heart');
+        b.innerText="❤️";
+        b.style.left = 50 + Math.random()*10 -5 + "%";
+        b.style.top = 50 + Math.random()*10 -5 + "%";
+        b.style.fontSize = (10 + Math.random()*20) + "px";
+        b.rotation = Math.random()*360;
+        container.appendChild(b);
+        hearts.push({el:b, speed:Math.random()*3 +1, rotSpeed:Math.random()*10});
+    }
+
+    // Typewriter + fade-in messages
     let idx=0;
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
@@ -104,6 +124,7 @@ gift.addEventListener('click', ()=>{
     function typeWriter(msg, cb){
         let i=0;
         messageDiv.innerText="";
+        messageDiv.style.opacity=1;
         function type(){
             if(i<msg.length){
                 messageDiv.innerText += msg[i];
@@ -126,19 +147,8 @@ gift.addEventListener('click', ()=>{
             finalDiv.classList.add('final');
             finalDiv.innerText="I love you, Sona ❤️";
             container.appendChild(finalDiv);
+            setTimeout(()=>{finalDiv.style.opacity=1;},100);
         }
-    }
-
-    // Gift burst hearts
-    for(let i=0;i<100;i++){
-        const b = document.createElement('div');
-        b.classList.add('heart');
-        b.innerText="❤️";
-        b.style.left = 50 + Math.random()*10 -5 + "%";
-        b.style.top = 50 + Math.random()*10 -5 + "%";
-        b.style.fontSize = (10 + Math.random()*20) + "px";
-        container.appendChild(b);
-        hearts.push({el:b, speed:Math.random()*3 +1});
     }
 
     nextMessage();
