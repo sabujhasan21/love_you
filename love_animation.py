@@ -1,196 +1,111 @@
-# love_gift_burst.py
-import tkinter as tk
+import streamlit as st
+import time
 import random
-import math
 
-# ---------- CONFIG ----------
-NUM_PETALS = 50
-TYPE_SPEED = 50  # ms per character
-SCREEN_DURATION = 3000  # ms per message
+# ----- Page Config -----
+st.set_page_config(page_title="❤️ Love Gift Animation ❤️", layout="wide")
 
-# ---------- HEART PETALS ----------
-class HeartPetal:
-    def __init__(self, canvas, width, height):
-        self.canvas = canvas
-        self.width = width
-        self.height = height
-        self.reset()
+# ----- CSS Styling -----
+st.markdown("""
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: linear-gradient(to bottom right, #1a0f1f, #4d0f1f);
+    height: 100vh;
+}
+.heart {
+    position: absolute;
+    font-size: 20px;
+    animation: float 5s linear infinite;
+}
+@keyframes float {
+    0% {transform: translateY(0px);}
+    50% {transform: translateY(-100px);}
+    100% {transform: translateY(0px);}
+}
+.gift {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    cursor: pointer;
+}
+.instruction {
+    text-align: center;
+    font-size: 28px;
+    color: #ffe6f2;
+    font-family: Georgia, serif;
+}
+.final {
+    text-align: center;
+    font-size: 80px;
+    color: #ff4d6d;
+    font-family: Georgia, serif;
+}
+</style>
+""", unsafe_allow_html=True)
 
-    def reset(self):
-        self.x = random.uniform(0, self.width)
-        self.y = random.uniform(-self.height, -10)
-        self.size = random.uniform(6, 12)
-        self.speed = random.uniform(1.0, 2.5)
-        self.swing = random.uniform(20, 80)
-        self.phase = random.uniform(0, 2*math.pi)
-        self.phase_speed = random.uniform(0.01, 0.04)
-        self.scale = self.size/10
-        self.id = self.create_heart()
+# ----- Floating Hearts Background -----
+hearts_html = ""
+for _ in range(50):
+    x = random.randint(0, 90)
+    y = random.randint(0, 80)
+    size = random.randint(10, 30)
+    hearts_html += f'<div class="heart" style="left:{x}%; top:{y}%; font-size:{size}px;">❤️</div>'
+st.markdown(hearts_html, unsafe_allow_html=True)
 
-    def create_heart(self):
-        points = []
-        for t in range(0,360,12):
-            rad = math.radians(t)
-            x = 16*math.sin(rad)**3
-            y = 13*math.cos(rad) -5*math.cos(2*rad)-2*math.cos(3*rad)-math.cos(4*rad)
-            points.append(self.x + x*self.scale)
-            points.append(self.y - y*self.scale)
-        return self.canvas.create_polygon(points, outline="#ff4d6d", fill="", width=2)
+# ----- Placeholders -----
+gift_placeholder = st.empty()
+message_placeholder = st.empty()
+final_placeholder = st.empty()
 
-    def update(self):
-        self.phase += self.phase_speed
-        dx = math.sin(self.phase)*(self.swing*0.02)
-        self.x += dx
-        self.y += self.speed
-        points=[]
-        for t in range(0,360,12):
-            rad = math.radians(t)
-            x = 16*math.sin(rad)**3
-            y = 13*math.cos(rad) -5*math.cos(2*rad)-2*math.cos(3*rad)-math.cos(4*rad)
-            points.append(self.x + x*self.scale)
-            points.append(self.y - y*self.scale)
-        self.canvas.coords(self.id,*points)
-        if self.y>self.height+40:
-            self.canvas.delete(self.id)
-            self.reset()
+# ----- Gift Box -----
+with gift_placeholder.container():
+    st.markdown(
+        '<div class="gift"><h1 style="font-size:120px;">💝</h1>'
+        '<div class="instruction">Open the box</div></div>',
+        unsafe_allow_html=True
+    )
+    open_gift = st.button("Open the Gift 💝")
 
-# ---------- HEART EXPLOSION ----------
-class HeartExplosion:
-    def __init__(self, canvas, x, y, count=20):
-        self.canvas = canvas
-        self.particles=[]
-        for _ in range(count):
-            angle = random.uniform(0,2*math.pi)
-            speed = random.uniform(2,5)
-            dx = math.cos(angle)*speed
-            dy = math.sin(angle)*speed
-            size = random.uniform(6,12)
-            p = {'x':x,'y':y,'dx':dx,'dy':dy,'size':size,'id':self.canvas.create_oval(x,x+size,y,y+size, fill="#ff4d6d", outline="")}
-            self.particles.append(p)
+# ----- On Gift Click -----
+if open_gift:
+    gift_placeholder.empty()  # remove gift box
 
-    def update(self):
-        for p in self.particles:
-            p['x'] += p['dx']
-            p['y'] += p['dy']
-            p['size'] *=0.95
-            self.canvas.coords(p['id'], p['x'],p['y'],p['x']+p['size'],p['y']+p['size'])
+    # Heart explosion
+    explosion_html = ""
+    for _ in range(30):
+        x = random.randint(30, 70)
+        y = random.randint(30, 70)
+        size = random.randint(20, 40)
+        explosion_html += f'<div class="heart" style="left:{x}%; top:{y}%; font-size:{size}px;">❤️</div>'
+    st.markdown(explosion_html, unsafe_allow_html=True)
 
-# ---------- TYPEWRITER TEXT ----------
-class TypewriterText:
-    def __init__(self, canvas, x, y, font, messages, callback=None):
-        self.canvas = canvas
-        self.x = x
-        self.y = y
-        self.font = font
-        self.messages = messages
-        self.index = 0
-        self.char_index = 0
-        self.text_id = self.canvas.create_text(x, y, text="", font=self.font, fill="#ffe6f2", justify="center")
-        self.callback = callback
-        self.next_message()
+    # Sequential romantic messages
+    messages = [
+        "My heart smiles whenever I think of you.",
+        "You are the sweetest part of my life.",
+        "Every moment with you feels like magic.",
+        "You make my ordinary days feel special.",
+        "Your love is the reason I believe in happiness.",
+        "You are my peace, my joy, my everything.",
+        "My world feels complete because of you.",
+        "And lastly..."
+    ]
 
-    def next_message(self):
-        if self.index >= len(self.messages):
-            if self.callback:
-                self.callback()  # call last interface
-            return
-        self.char_index = 0
-        self.current_msg = self.messages[self.index]
-        self.index += 1
-        self.type_next_char()
+    for msg in messages:
+        message_placeholder.markdown(
+            f'<h2 style="text-align:center; color:#ffe6f2; font-family:Georgia, serif;">{msg}</h2>',
+            unsafe_allow_html=True
+        )
+        time.sleep(2)
 
-    def type_next_char(self):
-        if self.char_index <= len(self.current_msg):
-            self.canvas.itemconfig(self.text_id, text=self.current_msg[:self.char_index])
-            self.char_index += 1
-            self.canvas.after(TYPE_SPEED, self.type_next_char)
-        else:
-            self.canvas.after(SCREEN_DURATION, self.next_message)
-
-# ---------- MAIN APP ----------
-class LoveApp:
-    def __init__(self, root):
-        self.root = root
-        root.title("❤️ Love Gift Animation ❤️")
-        self.width = root.winfo_screenwidth()
-        self.height = root.winfo_screenheight()
-        root.geometry(f"{self.width}x{self.height}")
-        root.attributes('-fullscreen', True)
-
-        self.canvas = tk.Canvas(root, width=self.width, height=self.height, bg="#1a0f1f")
-        self.canvas.pack()
-
-        # Petals & explosions
-        self.petals = [HeartPetal(self.canvas,self.width,self.height) for _ in range(NUM_PETALS)]
-        self.explosions = []
-
-        # Gift box as 💝 emoji in white
-        self.gift_id = self.canvas.create_text(self.width//2, self.height//2, text="💝", font=("Arial", 120), fill="white")
-        # Text below gift
-        self.instruction_id = self.canvas.create_text(self.width//2, self.height//2+100, text="Open the box", font=("Georgia",28,"italic"), fill="#ffe6f2")
-        self.canvas.tag_bind(self.gift_id, "<Button-1>", self.open_gift)
-
-        self.animate()
-        self.root.after(5000,self.create_explosion)
-
-    def open_gift(self, event=None):
-        # Remove gift & instruction
-        self.canvas.delete(self.gift_id)
-        self.canvas.delete(self.instruction_id)
-        # Heart explosion like gift burst
-        for _ in range(5):
-            self.explosions.append(HeartExplosion(self.canvas, self.width//2, self.height//2, count=20))
-        # Start typewriter messages
-        self.messages = [
-            "My heart smiles whenever I think of you.",
-            "You are the sweetest part of my life.",
-            "Every moment with you feels like magic.",
-            "You make my ordinary days feel special.",
-            "Your love is the reason I believe in happiness.",
-            "You are my peace, my joy, my everything.",
-            "My world feels complete because of you.",
-            "And lastly..."
-        ]
-        self.text = TypewriterText(self.canvas,self.width//2,self.height//2,("Georgia",36,"bold"),
-                                   self.messages,self.show_final_interface)
-
-    def show_final_interface(self):
-        # Clear canvas except background
-        self.canvas.delete("all")
-        self.canvas.configure(bg="#1a0f1f")
-        # Petals & explosions continue
-        self.petals = [HeartPetal(self.canvas,self.width,self.height) for _ in range(NUM_PETALS)]
-        self.explosions = []
-        # Fade-in "I love you, Sona"
-        self.final_text_id = self.canvas.create_text(self.width//2,self.height//2,
-                                                     text="I love you, Sona ❤️",
-                                                     font=("Georgia",72,"bold"),
-                                                     fill="#ff4d6d", state='hidden')
-        self.alpha = 0
-        self.fade_in_final_text()
-
-    def fade_in_final_text(self):
-        self.alpha += 5
-        if self.alpha>255:
-            self.alpha = 255
-        color = f"#{self.alpha:02x}4d6d"
-        self.canvas.itemconfig(self.final_text_id, fill=color, state='normal')
-        if self.alpha<255:
-            self.canvas.after(50, self.fade_in_final_text)
-
-    def create_explosion(self):
-        x = random.randint(self.width//3, 2*self.width//3)
-        y = random.randint(self.height//3, 2*self.height//3)
-        self.explosions.append(HeartExplosion(self.canvas,x,y))
-        self.root.after(4000, self.create_explosion)
-
-    def animate(self):
-        for p in self.petals:
-            p.update()
-        for e in self.explosions:
-            e.update()
-        self.root.after(30,self.animate)
-
-root = tk.Tk()
-LoveApp(root)
-root.mainloop()
+    # Clear messages and show final text
+    message_placeholder.empty()
+    final_placeholder.markdown(
+        '<div class="final">I love you, Sona ❤️</div>',
+        unsafe_allow_html=True
+    )
