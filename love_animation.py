@@ -2,23 +2,16 @@ import streamlit as st
 import time
 import random
 
-# Page setup
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title="❤️ Love Gift Animation ❤️")
 
-# Romantic background using CSS
+# Background
 st.markdown("""
 <style>
 body {
-    background: linear-gradient(to bottom right, #ffb6c1, #ffc0cb);
-}
-.gift {
-    text-align: center;
-    margin-top: 150px;
-}
-.instruction {
-    text-align: center;
-    font-size: 24px;
-    color: #fff;
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(to bottom right, #1a0f1f, #4d0f1f);
+    overflow: hidden;
 }
 .heart {
     position: absolute;
@@ -30,57 +23,77 @@ body {
     50% {transform: translateY(-100px);}
     100% {transform: translateY(0px);}
 }
+.gift {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    cursor: pointer;
+}
+.instruction {
+    text-align: center;
+    font-size: 28px;
+    color: #ffe6f2;
+    font-family: Georgia, serif;
+}
+.final {
+    text-align: center;
+    font-size: 80px;
+    color: #ff4d6d;
+    font-family: Georgia, serif;
+}
 </style>
 """, unsafe_allow_html=True)
 
-# Display gift box + instruction
-st.markdown(
-    """
-    <div class="gift">
-        <h1 style='font-size:120px; cursor:pointer;'>💝</h1>
-        <div class="instruction">Open the gift</div>
-    </div>
-    """, unsafe_allow_html=True
-)
-
-# Placeholders
+# Placeholders for Streamlit flow
+gift_placeholder = st.empty()
 message_placeholder = st.empty()
 final_placeholder = st.empty()
 
-# Button to trigger gift opening
-gift_clicked = st.button("Open the Gift 💝")
+# Generate floating hearts
+hearts_html = ""
+for _ in range(50):
+    x = random.randint(0, 90)
+    y = random.randint(0, 80)
+    size = random.randint(10, 30)
+    hearts_html += f'<div class="heart" style="left:{x}%; top:{y}%; font-size:{size}px;">❤️</div>'
+st.markdown(hearts_html, unsafe_allow_html=True)
 
-if gift_clicked:
-    # Gift-blast hearts effect
-    hearts_html = ""
+# Step 1: Gift box
+with gift_placeholder.container():
+    st.markdown('<div class="gift"><h1 style="font-size:120px;">💝</h1><div class="instruction">Open the box</div></div>', unsafe_allow_html=True)
+    open_gift = st.button("Open the Gift 💝")
+
+# Step 2: Gift clicked → hearts explode + typewriter messages
+if open_gift:
+    gift_placeholder.empty()  # remove gift box
+
+    # Heart explosion
+    explosion_html = ""
     for _ in range(30):
-        x = random.randint(0, 90)
-        y = random.randint(0, 80)
+        x = random.randint(30, 70)
+        y = random.randint(30, 70)
         size = random.randint(20, 40)
-        hearts_html += f'<div class="heart" style="left:{x}%; top:{y}%; font-size:{size}px;">❤️</div>'
-    st.markdown(hearts_html, unsafe_allow_html=True)
+        explosion_html += f'<div class="heart" style="left:{x}%; top:{y}%; font-size:{size}px;">❤️</div>'
+    st.markdown(explosion_html, unsafe_allow_html=True)
 
-    # Sequential romantic messages
+    # Sequential typewriter messages
     messages = [
-        "Dear, my love...",
-        "You fill my life with happiness.",
-        "Every moment with you is magical.",
-        "You are my sweetest joy.",
-        "You make my heart flutter.",
-        "My world shines because of you.",
-        "I cherish you forever.",
-        "And finally..."
+        "My heart smiles whenever I think of you.",
+        "You are the sweetest part of my life.",
+        "Every moment with you feels like magic.",
+        "You make my ordinary days feel special.",
+        "Your love is the reason I believe in happiness.",
+        "You are my peace, my joy, my everything.",
+        "My world feels complete because of you.",
+        "And lastly..."
     ]
 
     for msg in messages:
-        message_placeholder.markdown(
-            f"<h2 style='text-align:center; color:#ffe6f2'>{msg}</h2>", unsafe_allow_html=True
-        )
+        message_placeholder.markdown(f'<h2 style="text-align:center; color:#ffe6f2; font-family:Georgia, serif;">{msg}</h2>', unsafe_allow_html=True)
         time.sleep(2)
 
-    # Clear messages and show final romantic message
+    # Clear messages and show final interface
     message_placeholder.empty()
-    final_placeholder.markdown(
-        "<h1 style='text-align:center; font-size:80px; color:#ff4d6d;'>I love you, Sona ❤️</h1>",
-        unsafe_allow_html=True
-    )
+    final_placeholder.markdown('<div class="final">I love you, Sona ❤️</div>', unsafe_allow_html=True)
