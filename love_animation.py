@@ -1,4 +1,4 @@
-# love_animation.py
+# love_animation_streamlit.py
 import streamlit as st
 import streamlit.components.v1 as components
 
@@ -34,22 +34,21 @@ body {
     font-size:28px;
     color:#ffe6f2;
 }
-#message {
+#message, #final {
     position:absolute;
     top:50%;
     left:50%;
     transform:translate(-50%, -50%);
-    font-size:36px;
     text-align:center;
 }
+#message {
+    font-size:36px;
+}
 #final {
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
     font-size:72px;
     color:#ff4d6d;
     opacity:0;
+    transition: opacity 3s;
 }
 canvas {
     position:absolute;
@@ -78,6 +77,7 @@ let petals = [];
 let explosions = [];
 const NUM_PETALS = 50;
 
+// Petals class
 class Petal {
     constructor(){
         this.x = Math.random()*canvas.width;
@@ -85,7 +85,6 @@ class Petal {
         this.size = Math.random()*10 + 6;
         this.speed = Math.random()*1.5+1;
         this.phase = Math.random()*2*Math.PI;
-        this.swing = Math.random()*40+20;
     }
     update(){
         this.phase += 0.02;
@@ -110,6 +109,7 @@ class Petal {
 }
 for(let i=0;i<NUM_PETALS;i++) petals.push(new Petal());
 
+// Explosion particles
 class Particle{
     constructor(x,y){
         this.x=x;
@@ -135,6 +135,7 @@ class Particle{
     }
 }
 
+// Animation loop
 function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     petals.forEach(p=>{p.update(); p.draw();});
@@ -147,6 +148,7 @@ function animate(){
 }
 animate();
 
+// Messages
 const messages = [
 "My heart smiles whenever I think of you.",
 "You are the sweetest part of my life.",
@@ -161,9 +163,9 @@ let msgIndex=0;
 let charIndex=0;
 const msgDiv = document.getElementById("message");
 
+// Typewriter effect
 function typeWriter(){
     if(msgIndex>=messages.length){
-        document.getElementById("final").style.transition="opacity 3s";
         document.getElementById("final").style.opacity=1;
         msgDiv.innerHTML="";
         return;
@@ -180,6 +182,7 @@ function typeWriter(){
     }
 }
 
+// Gift click event
 document.getElementById("gift").addEventListener("click",()=>{
     const gift = document.getElementById("gift");
     const instr = document.getElementById("instruction");
