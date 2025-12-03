@@ -56,6 +56,9 @@ html, body, [class*="block-container"] {
 <div id="container">
     <div id="gift">💝</div>
     <div id="open-text">Open the box</div>
+    <audio autoplay loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
 </div>
 
 <script>
@@ -85,7 +88,7 @@ for(let i=0;i<80;i++){
     s.style.top=Math.random()*100+"%";
     s.style.width=(1+Math.random()*2)+"px";
     s.style.height=(1+Math.random()*2)+"px";
-    s.style.animationDuration=(1+Math.random()*2)+"s";
+    s.style.animationDuration=(1+Math.random()*3)+"s";
     container.appendChild(s);
     stars.push(s);
 }
@@ -99,7 +102,7 @@ function createHeart(size=15, top=-5, x=null){
     heart.style.top = top + "%";
     heart.style.fontSize = size + "px";
     heart.rotation = Math.random()*360;
-    heart.speed = 0.3 + Math.random()*0.7;
+    heart.speed = 0.05 + Math.random()*0.2;  // slower
     heart.alpha = 0;
     container.appendChild(heart);
     hearts.push(heart);
@@ -110,9 +113,9 @@ function animateHearts(){
         let top = parseFloat(h.style.top);
         top += h.speed;
         h.style.top = top + "%";
-        h.rotation += 1;
+        h.rotation += 0.2; // slower rotation
         h.style.transform = "translate(-50%,0) rotate("+h.rotation+"deg)";
-        h.alpha += 0.01;
+        h.alpha += 0.002; // slow fade-in
         if(h.alpha>1) h.alpha=1;
         h.style.opacity = h.alpha;
         if(top>100){
@@ -124,7 +127,7 @@ function animateHearts(){
     requestAnimationFrame(animateHearts);
 }
 
-for(let i=0;i<40;i++){ createHeart(); }
+for(let i=0;i<50;i++){ createHeart(); }
 animateHearts();
 
 // Gift click
@@ -133,7 +136,7 @@ gift.addEventListener('click', ()=>{
     setTimeout(()=>{gift.style.display='none'; openText.style.display='none';},300);
 
     // Small stroke heart bursts
-    for(let i=0;i<100;i++){
+    for(let i=0;i<80;i++){
         createHeart(Math.random()*12+8, 50+Math.random()*10, 50+Math.random()*10);
     }
 
@@ -148,12 +151,11 @@ gift.addEventListener('click', ()=>{
         messageDiv.style.opacity=1;
         function type(){
             if(i<msg.length){
-                // add small space between words for cinematic feel
                 messageDiv.innerText += msg[i];
                 if(msg[i]===' ') messageDiv.innerText += '\u00A0'; 
                 i++;
-                setTimeout(type,50);
-            } else { setTimeout(cb,1500); }
+                setTimeout(type,70); // slower typing
+            } else { setTimeout(cb,1800); }
         }
         type();
     }
@@ -177,4 +179,4 @@ gift.addEventListener('click', ()=>{
 </script>
 """
 
-html(html_code, height=800)
+html(html_code, height=900)
