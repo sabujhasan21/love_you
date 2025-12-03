@@ -8,40 +8,46 @@ st.set_page_config(page_title="❤️ Love Gift Animation ❤️", layout="wide"
 # ----- CSS Styling -----
 st.markdown("""
 <style>
-body {
+html, body, [class*="block-container"] {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background: linear-gradient(to bottom right, #1a0f1f, #4d0f1f);
     height: 100vh;
+    width: 100vw;
+    background: linear-gradient(to bottom right, #1a0f1f, #4d0f1f);
 }
+
 .heart {
     position: absolute;
     font-size: 20px;
     animation: float 5s linear infinite;
 }
+
 @keyframes float {
     0% {transform: translateY(0px);}
     50% {transform: translateY(-100px);}
     100% {transform: translateY(0px);}
 }
+
 .gift {
     position: absolute;
-    top: 40%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
     cursor: pointer;
 }
+
 .instruction {
     text-align: center;
-    font-size: 28px;
+    font-size: 3vh;
     color: #ffe6f2;
     font-family: Georgia, serif;
 }
+
 .final {
     text-align: center;
-    font-size: 80px;
+    font-size: 8vh;
     color: #ff4d6d;
     font-family: Georgia, serif;
 }
@@ -65,7 +71,7 @@ final_placeholder = st.empty()
 # ----- Gift Box -----
 with gift_placeholder.container():
     st.markdown(
-        '<div class="gift"><h1 style="font-size:120px;">💝</h1>'
+        '<div class="gift"><h1 style="font-size:15vh;">💝</h1>'
         '<div class="instruction">Open the box</div></div>',
         unsafe_allow_html=True
     )
@@ -98,7 +104,7 @@ if open_gift:
 
     for msg in messages:
         message_placeholder.markdown(
-            f'<h2 style="text-align:center; color:#ffe6f2; font-family:Georgia, serif;">{msg}</h2>',
+            f'<h2 style="text-align:center; color:#ffe6f2; font-family:Georgia, serif; font-size:4vh;">{msg}</h2>',
             unsafe_allow_html=True
         )
         time.sleep(2)
