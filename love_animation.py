@@ -159,7 +159,7 @@ let msgIndex=0;
 let charIndex=0;
 const msgDiv = document.getElementById("message");
 
-// Typewriter effect
+Typewriter effect
 function typeWriter(){
     if(msgIndex>=messages.length){
         document.getElementById("final").style.opacity=1;
@@ -178,7 +178,7 @@ function typeWriter(){
     }
 }
 
-// Gift click event
+ Gift click event
 document.getElementById("gift").addEventListener("click",()=>{
     const gift = document.getElementById("gift");
     const instr = document.getElementById("instruction");
@@ -196,3 +196,4 @@ document.getElementById("gift").addEventListener("click",()=>{
 """
 
 components.html(html_code, height=900)
+
