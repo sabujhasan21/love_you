@@ -57,7 +57,7 @@ html, body, [class*="block-container"] {
     <div id="gift">💝</div>
     <div id="open-text">Open the box</div>
     <audio autoplay loop>
-        <source src="https://www.youtube.com/watch?v=JHyhUWcFhWY&list=PLfP6i5T0-DkImSa4jTf2RsWKkbEgS7ugB" type="audio/mpeg">
+        <source src="" type="audio/mpeg">
     </audio>
 </div>
 
@@ -180,4 +180,3 @@ gift.addEventListener('click', ()=>{
 """
 
 html(html_code, height=900)
-
