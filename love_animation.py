@@ -1,21 +1,51 @@
 import streamlit as st
 import time
+import random
 
 # Page setup
 st.set_page_config(layout="wide")
 st.title("💖 Love Animation 💖")
 
-# Gift box emoji
+# Background
 st.markdown(
-    "<h1 style='text-align:center; font-size:120px; cursor:pointer;'>💝</h1>", 
-    unsafe_allow_html=True
-)
-st.markdown(
-    "<h3 style='text-align:center;'>Click the gift to open</h3>", 
+    """
+    <style>
+    .bg {
+        background-image: linear-gradient(to bottom right, #ffb6c1, #ffc0cb);
+        height: 100vh;
+        background-size: cover;
+    }
+    .heart {
+        position: absolute;
+        font-size: 20px;
+        animation: float 5s linear infinite;
+    }
+    @keyframes float {
+        0% {transform: translateY(0px);}
+        50% {transform: translateY(-100px);}
+        100% {transform: translateY(0px);}
+    }
+    .gift {
+        text-align: center;
+        margin-top: 150px;
+    }
+    .instruction {
+        text-align: center;
+        font-size: 24px;
+        color: #fff;
+    }
+    </style>
+    <div class="bg">
+        <div class="gift">
+            <h1 style="font-size:120px; cursor:pointer;">💝</h1>
+            <div class="instruction">Open the gift</div>
+        </div>
+    </div>
+    """, 
     unsafe_allow_html=True
 )
 
-# Placeholders for messages and final message
+# Placeholder for messages
 message_placeholder = st.empty()
 final_placeholder = st.empty()
 
@@ -23,12 +53,16 @@ final_placeholder = st.empty()
 gift_clicked = st.button("Open the Gift 💝")
 
 if gift_clicked:
-    # Show gift opening animation (simple text effect)
-    st.markdown("<h1 style='text-align:center; font-size:120px; color:#ff4d6d;'>💝</h1>", unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align:center;'>Opening...</h3>", unsafe_allow_html=True)
-    time.sleep(1)
+    # Show gift-blast effect (hearts around)
+    hearts_html = ""
+    for _ in range(30):
+        x = random.randint(0, 90)
+        y = random.randint(0, 80)
+        size = random.randint(20, 40)
+        hearts_html += f'<div class="heart" style="left:{x}%; top:{y}%; font-size:{size}px;">❤️</div>'
+    st.markdown(hearts_html, unsafe_allow_html=True)
 
-    # Sequential messages
+    # Sequential romantic messages
     messages = [
         "My heart smiles whenever I think of you.",
         "You are the sweetest part of my life.",
@@ -42,12 +76,12 @@ if gift_clicked:
 
     for msg in messages:
         message_placeholder.markdown(
-            f"<h2 style='text-align:center; color:#ffe6f2'>{msg}</h2>", 
+            f"<h2 style='text-align:center; color:#fff; font-family:sans-serif'>{msg}</h2>", 
             unsafe_allow_html=True
         )
-        time.sleep(2)  # delay between messages
+        time.sleep(2)
 
-    # Clear messages and show final romantic message
+    # Clear messages and show final message
     message_placeholder.empty()
     final_placeholder.markdown(
         "<h1 style='text-align:center; font-size:80px; color:#ff4d6d;'>I love you, Sona ❤️</h1>", 
