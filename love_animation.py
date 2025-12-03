@@ -1,8 +1,9 @@
 import streamlit as st
+from streamlit.components.v1 import html
 
 st.set_page_config(page_title="❤️ Love Gift Animation ❤️", layout="wide")
 
-st.markdown("""
+html_code = """
 <style>
 html, body, [class*="block-container"] {
     margin:0; padding:0; overflow:hidden; height:100vh; width:100vw;
@@ -65,7 +66,6 @@ const messages = [
 
 let hearts = [];
 
-// Create falling stroke hearts
 function createHeart() {
     const heart = document.createElement('div');
     heart.classList.add('heart');
@@ -98,11 +98,9 @@ for(let i=0;i<50;i++){createHeart();}
 animateHearts();
 
 gift.addEventListener('click', ()=>{
-    // Animate gift shrink
     gift.style.transform="translate(-50%,-50%) scale(0)";
     setTimeout(()=>{gift.style.display='none'; openText.style.display='none';},300);
 
-    // Gift burst hearts
     for(let i=0;i<100;i++){
         const b = document.createElement('div');
         b.classList.add('heart');
@@ -115,7 +113,6 @@ gift.addEventListener('click', ()=>{
         hearts.push({el:b, speed:Math.random()*3 +1, rotSpeed:Math.random()*10});
     }
 
-    // Typewriter + fade-in messages
     let idx=0;
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
@@ -130,9 +127,7 @@ gift.addEventListener('click', ()=>{
                 messageDiv.innerText += msg[i];
                 i++;
                 setTimeout(type,50);
-            } else {
-                setTimeout(cb,1500);
-            }
+            } else { setTimeout(cb,1500); }
         }
         type();
     }
@@ -154,4 +149,6 @@ gift.addEventListener('click', ()=>{
     nextMessage();
 });
 </script>
-""", unsafe_allow_html=True)
+"""
+
+html(html_code, height=800)
