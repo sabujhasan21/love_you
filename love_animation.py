@@ -77,7 +77,6 @@ let petals = [];
 let explosions = [];
 const NUM_PETALS = 50;
 
-// Petals class
 class Petal {
     constructor(){
         this.x = Math.random()*canvas.width;
@@ -109,7 +108,6 @@ class Petal {
 }
 for(let i=0;i<NUM_PETALS;i++) petals.push(new Petal());
 
-// Explosion particles
 class Particle{
     constructor(x,y){
         this.x=x;
@@ -135,7 +133,6 @@ class Particle{
     }
 }
 
-// Animation loop
 function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     petals.forEach(p=>{p.update(); p.draw();});
@@ -148,7 +145,6 @@ function animate(){
 }
 animate();
 
-// Messages
 const messages = [
 "My heart smiles whenever I think of you.",
 "You are the sweetest part of my life.",
